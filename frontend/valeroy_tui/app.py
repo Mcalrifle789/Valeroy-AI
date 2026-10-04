@@ -20,6 +20,7 @@ from typing import Any
 
 from valeroy_backend import commands, native
 
+from . import banner as banner_mod
 from . import prompts, setup_wizard, surface as surface_mod, theme as theme_mod
 from .client import GatewayClient, GatewayError, spawn_gateway, stop_gateway
 from .surface import BOLD, REVERSE
@@ -168,13 +169,21 @@ class App:
 
         self._draw_status_bar(cols, th)
 
+        # Pixelized logo banner under the status bar (toggle with /banner);
+        # hidden when the terminal is too small to spare the rows.
+        banner_h = banner_mod.height_for(cols) if self.prefs.get("banner", True) else 0
+        if banner_h and rows - banner_h < 12:
+            banner_h = 0
+        if banner_h:
+            banner_mod.draw(self.surface, cols, 1, th)
+
         # The chatbox is a centred strip two rows tall near the bottom.
         box_width = min(max(40, cols - 8), 110)
         box_x = (cols - box_width) // 2
         box_y = rows - 2
         footer_y = rows - 1
 
-        transcript_top = 2
+        transcript_top = (1 + banner_h + 1) if banner_h else 2
         transcript_height = max(1, box_y - 1 - transcript_top)
         self._draw_transcript(transcript_top, transcript_height, cols, th)
 
@@ -867,6 +876,17 @@ class App:
 
     def _cmd_clear(self, args: str) -> None:
         self.transcript.clear()
+
+    def _cmd_banner(self, args: str) -> None:
+        """Show, hide or toggle the pixelized logo banner."""
+        arg = args.strip().lower()
+        current = bool(self.prefs.get("banner", True))
+        shown = current if arg in ("", "toggle") else arg in ("on", "show", "true", "1")
+        self.prefs["banner"] = shown
+        _save_prefs(self.prefs)
+        self.surface.invalidate()
+        self.transcript.add("note",
+                            "Logo banner on." if shown else "Logo banner off.")
 
     def _cmd_help(self, args: str) -> None:
         if args.strip():

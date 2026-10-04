@@ -129,6 +129,8 @@ COMMANDS: tuple[Command, ...] = (
     Command("approve", "Approve the pending permission request", "/approve", "app"),
     Command("deny", "Deny the pending permission request", "/deny", "app"),
     Command("clear", "Clear the transcript view", "/clear", "app"),
+    Command("banner", "Show, hide or toggle the logo banner", "/banner [on|off]",
+            "app", handler="ui", arg_hint="on|off"),
     Command("help", "List every command", "/help [command]", "app",
             arg_hint="command"),
     Command("doctor", "Report which native layers are active", "/doctor", "app"),
