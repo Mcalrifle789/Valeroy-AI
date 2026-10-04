@@ -1,0 +1,26 @@
+{
+  "name": "valeroy-ai",
+  "version": "1.0.0",
+  "description": "Local-first personal AI agent desktop shell for Valeroy AI.",
+  "main": "main.cjs",
+  "bin": {
+    "valeroy": "./bin/valeroy.cjs"
+  },
+  "scripts": {
+    "start": "electron .",
+    "setup": "node ./bin/valeroy.cjs setup",
+    "valeroy": "node ./bin/valeroy.cjs",
+    "valeroy:setup": "node ./bin/valeroy.cjs setup"
+  },
+  "keywords": [
+    "electron",
+    "local-first",
+    "ai-agent",
+    "mcp"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "electron": "^43.2.0"
+  }
+}

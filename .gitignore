@@ -1,0 +1,25 @@
+# Build artifacts (rebuild with scripts/build.ps1)
+backend/core/target/
+build/native/
+*.obj
+*.exp
+*.lib
+*.pdb
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+
+# Local runtime / scratch
+.tmp-valeroy-test/
+frontend.json
+
+# Node (archived Electron shell)
+.electron-archive/node_modules/
+node_modules/
+
+# The update spec embeds a plaintext GitHub token in cleartext - never commit it.
+docs/*.docx

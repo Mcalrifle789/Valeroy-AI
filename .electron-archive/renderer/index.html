@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valeroy AI</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="startup" id="startup" aria-hidden="true">
+      <div class="startup-logo">
+        <img src="../Valeroy AI logo.png" alt="">
+        <div class="bars" id="bars"></div>
+      </div>
+    </div>
+
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <span class="terminal-icon">>_</span>
+          <div>
+            <strong>valeroy-ai</strong>
+            <small>agentic royalty / local gateway</small>
+          </div>
+          <span class="version">v1.0.0</span>
+        </div>
+        <form class="command-palette" id="commandPalette">
+          <label for="commandSelect">Command</label>
+          <select id="commandSelect"></select>
+          <button type="submit">Run</button>
+        </form>
+        <div class="gateway-pill" id="gatewayPill">Gateway starting</div>
+      </header>
+
+      <section class="workspace">
+        <aside class="rail panel">
+          <div class="rail-emblem" aria-label="Valeroy AI">
+            <span>Valeroy AI</span>
+          </div>
+          <nav class="rail-nav" aria-label="Primary">
+            <button class="active" data-tab="chat">Chat</button>
+            <button data-tab="agents">Agents</button>
+            <button data-tab="mcps">MCPs</button>
+            <button data-tab="files">Files</button>
+            <button data-tab="settings">Settings</button>
+          </nav>
+          <div class="rail-footer">
+            <span id="profileUser">you@valeroy.ai</span>
+            <button id="storageButton">Storage</button>
+          </div>
+        </aside>
+
+        <section class="main-column">
+          <section class="hero-band panel">
+            <div class="hero-copy">
+              <span class="eyebrow">Local-first command center</span>
+              <h1>Valeroy AI</h1>
+              <p id="readinessText">Gateway online. Run terminal setup to unlock your selected providers.</p>
+              <div class="hero-actions">
+                <button data-command="/new">New Session</button>
+                <button data-command="/beehive">Beehive</button>
+                <button data-command="/mcp">MCPs</button>
+              </div>
+            </div>
+            <div class="hero-status">
+              <div>
+                <span>Status</span>
+                <strong class="online-dot" id="systemStatus">Online</strong>
+              </div>
+              <div>
+                <span>Model</span>
+                <strong id="modelName">No model selected</strong>
+              </div>
+              <div>
+                <span>Provider</span>
+                <strong id="providerName">No provider selected</strong>
+              </div>
+              <div>
+                <span>Gateway</span>
+                <strong id="gatewayUrl">127.0.0.1</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="control-deck panel">
+            <label>
+              <span>/provider</span>
+              <select id="providerSelect"></select>
+            </label>
+            <label>
+              <span>/model</span>
+              <select id="modelSelect"></select>
+            </label>
+            <label>
+              <span>/sessions</span>
+              <select id="sessionSelect"></select>
+            </label>
+            <label>
+              <span>/agent</span>
+              <select id="agentSelect"></select>
+            </label>
+            <label>
+              <span>/theme</span>
+              <select id="themeSelect"></select>
+            </label>
+          </section>
+
+          <section class="command-options panel" id="commandOptionsPanel">
+            <div class="panel-head">
+              <div>
+                <h2>Command Options</h2>
+                <small id="commandOptionsTitle">Type or choose a command to show its dropdowns.</small>
+              </div>
+              <button id="applyCommandOptions" disabled>Apply</button>
+            </div>
+            <div class="options-grid" id="commandOptions"></div>
+          </section>
+
+          <section class="chat-panel panel" id="chatTab">
+            <div class="panel-head">
+              <div>
+                <h2>Session Console</h2>
+                <small id="sessionName">No active session</small>
+              </div>
+              <div class="working-indicator" id="workingIndicator" hidden>
+                <span></span>
+                <small>Working</small>
+              </div>
+            </div>
+            <div class="drop-zone" id="dropZone">
+              <div class="chat-log" id="chatLog">
+                <article class="message assistant">
+                  <strong>Valeroy</strong>
+                  <p>Ready. No model is running. Select a provider and model from setup-backed dropdowns before running model commands.</p>
+                </article>
+              </div>
+            </div>
+            <div class="typed-command-dropdown" id="typedCommandDropdown" hidden>
+              <div class="panel-head">
+                <div>
+                  <h2 id="typedCommandTitle">Command Options</h2>
+                  <small id="typedCommandHelp">Dropdown options for the typed command.</small>
+                </div>
+                <button type="button" id="typedApplyCommandOptions">Apply</button>
+              </div>
+              <div class="options-grid" id="typedCommandControls"></div>
+            </div>
+            <form class="composer" id="composer">
+              <span>you@valeroy-ai:~$</span>
+              <input id="messageInput" autocomplete="off" placeholder="Ask, drop files, or type /help">
+              <button type="submit">Send</button>
+            </form>
+          </section>
+        </section>
+
+        <aside class="inspector">
+          <section class="panel" id="modelPanel">
+            <div class="panel-head">
+              <h2>Active Model</h2>
+              <button id="modelButton">Change</button>
+            </div>
+            <div class="model-card">
+              <span id="modelVendor">No provider selected</span>
+              <strong id="currentModel">No model selected</strong>
+              <p>Nothing is running by default.</p>
+              <div class="meter"><span id="modelMeter" style="width: 0%"></span></div>
+            </div>
+          </section>
+
+          <section class="panel" id="agentsPanel">
+            <div class="panel-head">
+              <h2>Agents</h2>
+              <button data-command="/create agent">Create</button>
+            </div>
+            <div class="agent-list" id="agentList"></div>
+          </section>
+
+          <section class="panel" id="mcpsPanel">
+            <div class="panel-head">
+              <h2>Connected MCPs</h2>
+              <button id="manageMcps">Add</button>
+            </div>
+            <div class="mcp-strip" id="integrationGrid"></div>
+          </section>
+        </aside>
+
+        <aside class="command-column panel">
+          <div class="panel-head">
+            <h2>Command Menu</h2>
+            <span id="commandCount">36</span>
+          </div>
+          <label class="menu-select">
+            <span>All commands</span>
+            <select id="sideCommandSelect"></select>
+          </label>
+          <div class="command-tabs">
+            <button class="active" data-command-filter="all">All</button>
+            <button data-command-filter="core">Core</button>
+            <button data-command-filter="tools">Tools</button>
+            <button data-command-filter="audio">Audio</button>
+          </div>
+          <div class="command-list" id="commandList"></div>
+        </aside>
+      </section>
+
+      <section class="bottom-dock">
+        <section class="panel file-queue" id="filesPanel">
+          <div class="panel-head">
+            <h2>File Drop</h2>
+            <small>Documents, images, audio, video</small>
+          </div>
+          <div id="fileQueue" class="file-list">
+            <span>No files queued</span>
+          </div>
+        </section>
+
+        <section class="panel permission-panel" id="permissionPanel">
+          <div>
+            <h2>Permission Queue</h2>
+            <p id="permissionText">No pending approvals.</p>
+          </div>
+          <div class="approval-actions">
+            <button id="approveButton" disabled>Approve</button>
+            <button id="denyButton" disabled>Deny</button>
+          </div>
+        </section>
+
+        <section class="panel status-grid">
+          <div><span>Uptime</span><strong id="uptime">0m</strong></div>
+          <div><span>Search</span><strong id="searchProvider">DuckDuckGo</strong></div>
+          <div><span>Tokens</span><strong id="tokenCount">0</strong></div>
+          <div><span>Clock</span><strong id="clock">--:--</strong></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

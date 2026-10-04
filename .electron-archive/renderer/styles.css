@@ -1,0 +1,864 @@
+:root {
+  color-scheme: dark;
+  --bg: #050403;
+  --panel: rgba(11, 10, 8, 0.92);
+  --panel-strong: rgba(20, 15, 8, 0.95);
+  --gold: #e3a72d;
+  --gold-soft: #a87517;
+  --gold-dim: #624411;
+  --text: #f5d999;
+  --muted: #b08a45;
+  --green: #8ed35f;
+  --red: #ef6b5a;
+  --blue: #7ab7ff;
+  --violet: #c7a0ff;
+  --line: 1px solid rgba(227, 167, 45, 0.78);
+  --bg-a: #050403;
+  --bg-b: #130905;
+  --panel-a: rgba(16, 13, 8, 0.96);
+  --panel-b: rgba(7, 7, 6, 0.96);
+  --panel-border: rgba(227, 167, 45, 0.78);
+  --grid-color: rgba(227, 167, 45, 0.05);
+  --grid-color-2: rgba(227, 167, 45, 0.04);
+  --logo-opacity: 0.2;
+  --logo-filter: saturate(0.85) contrast(1.08);
+  --glow: rgba(227, 167, 45, 0.18);
+  font-size: 13px;
+  font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 0;
+  min-height: 680px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--bg-b) 76%, transparent), rgba(3, 3, 3, 0.98)),
+    var(--bg-a);
+  color: var(--text);
+  overflow: auto;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color-2) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to bottom, black, transparent 88%);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(5, 4, 3, 0.78), rgba(5, 4, 3, 0.96)),
+    url("../Valeroy AI logo.png") center 38% / min(920px, 82vw) auto no-repeat;
+  opacity: var(--logo-opacity);
+  mix-blend-mode: screen;
+  filter: var(--logo-filter);
+}
+
+body.dragging .drop-zone {
+  border-color: var(--green);
+  background: rgba(142, 211, 95, 0.07);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  background: rgba(15, 12, 7, 0.98);
+  color: var(--gold);
+  padding: 6px 9px;
+  cursor: pointer;
+}
+
+button:hover,
+button.active {
+  background: rgba(227, 167, 45, 0.15);
+  color: #ffe4a4;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+input,
+select {
+  min-width: 0;
+  border: 1px solid rgba(227, 167, 45, 0.46);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.44);
+  color: var(--text);
+  padding: 7px 9px;
+  outline: 0;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(227, 167, 45, 0.12);
+}
+
+select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--gold) 50%),
+    linear-gradient(135deg, var(--gold) 50%, transparent 50%);
+  background-position:
+    calc(100% - 16px) 50%,
+    calc(100% - 10px) 50%;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 34px;
+}
+
+.app-shell {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 8px;
+  display: grid;
+  grid-template-rows: 44px minmax(0, 1fr) 92px;
+  gap: 8px;
+}
+
+.topbar {
+  display: grid;
+  grid-template-columns: 250px minmax(320px, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-lockup strong {
+  display: block;
+  color: var(--gold);
+  font-size: 15px;
+}
+
+.brand-lockup small,
+.version {
+  color: var(--muted);
+}
+
+.terminal-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 28px;
+  border: var(--line);
+  border-radius: 6px;
+  color: var(--gold);
+}
+
+.command-palette {
+  display: grid;
+  grid-template-columns: auto minmax(240px, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  border: var(--line);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.36);
+  padding: 4px 8px;
+}
+
+.command-palette label {
+  color: var(--gold);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.command-palette select {
+  border: 0;
+  background: transparent;
+  padding: 4px;
+  box-shadow: none;
+}
+
+.gateway-pill {
+  border: var(--line);
+  border-radius: 999px;
+  color: var(--green);
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+
+.workspace {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 170px minmax(390px, 1.35fr) minmax(250px, 0.78fr) minmax(280px, 0.84fr);
+  gap: 8px;
+}
+
+.panel {
+  min-width: 0;
+  min-height: 0;
+  border: var(--line);
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, var(--panel-a), var(--panel-b)),
+    var(--panel);
+  box-shadow:
+    inset 0 0 32px rgba(227, 167, 45, 0.04),
+    0 18px 40px rgba(0, 0, 0, 0.24),
+    0 0 28px var(--glow);
+  overflow: auto;
+}
+
+.panel.attention {
+  animation: panel-attention 850ms ease-out;
+}
+
+@keyframes panel-attention {
+  0% {
+    border-color: #fff0a8;
+    box-shadow: 0 0 0 2px rgba(255, 240, 168, 0.42), 0 0 34px rgba(227, 167, 45, 0.32);
+  }
+  100% {
+    border-color: rgba(227, 167, 45, 0.78);
+  }
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.panel h2 {
+  margin: 0;
+  color: var(--gold);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.panel small,
+.panel-head small {
+  color: var(--muted);
+}
+
+.rail {
+  padding: 8px;
+  display: grid;
+  grid-template-rows: 96px 1fr auto;
+  gap: 8px;
+}
+
+.rail-emblem {
+  position: relative;
+  width: 100%;
+  height: 96px;
+  display: grid;
+  place-items: end start;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(227, 167, 45, 0.35);
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(7, 6, 4, 0.12), rgba(7, 6, 4, 0.92)),
+    url("../Valeroy AI logo.png") center / cover;
+  background-blend-mode: multiply;
+}
+
+.rail-emblem::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(227, 167, 45, 0.24), transparent 42%);
+  mix-blend-mode: screen;
+}
+
+.rail-emblem span {
+  position: relative;
+  z-index: 1;
+  color: #ffe2a1;
+  font-weight: 700;
+  text-shadow: 0 0 14px rgba(0, 0, 0, 0.9);
+}
+
+.rail-nav {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+}
+
+.rail-nav button {
+  text-align: left;
+}
+
+.rail-footer {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  overflow: hidden;
+}
+
+.rail-footer span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.main-column {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 132px auto auto minmax(0, 1fr);
+  gap: 8px;
+}
+
+.hero-band {
+  position: relative;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 12px;
+  isolation: isolate;
+}
+
+.hero-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(5, 4, 3, 0.55), rgba(5, 4, 3, 0.92)),
+    url("../Valeroy AI logo.png") center / cover;
+  opacity: 0.42;
+  filter: saturate(0.95) contrast(1.08);
+  background-blend-mode: multiply;
+}
+
+.eyebrow {
+  color: var(--green);
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.hero-copy h1 {
+  margin: 8px 0;
+  color: #ffd875;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.hero-copy p {
+  margin: 0;
+  max-width: 650px;
+  font-size: 12px;
+  color: #e8c57d;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.hero-status {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.hero-status div,
+.status-grid div {
+  border: 1px solid rgba(227, 167, 45, 0.26);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.34);
+  padding: 7px;
+  min-width: 0;
+}
+
+.hero-status span,
+.status-grid span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.hero-status strong,
+.status-grid strong {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+.control-deck {
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.control-deck label,
+.menu-select {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.control-deck span,
+.menu-select span {
+  color: var(--gold);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.command-options {
+  padding: 8px;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.options-grid label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.options-grid span {
+  color: var(--gold);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.online-dot::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 7px;
+  border-radius: 999px;
+  background: var(--green);
+  box-shadow: 0 0 10px rgba(142, 211, 95, 0.72);
+}
+
+.chat-panel {
+  padding: 9px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.working-indicator {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--green);
+}
+
+.working-indicator span {
+  width: 14px;
+  height: 14px;
+  clip-path: polygon(50% 0, 61% 34%, 98% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 2% 35%, 39% 34%);
+  background: var(--gold);
+  animation: star-spin 900ms linear infinite;
+}
+
+@keyframes star-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.drop-zone {
+  min-height: 0;
+  border: 1px dashed rgba(227, 167, 45, 0.24);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.chat-log {
+  height: 100%;
+  overflow: auto;
+  padding: 9px;
+}
+
+.message {
+  margin-bottom: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(227, 167, 45, 0.18);
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.message.user {
+  border-color: rgba(122, 183, 255, 0.38);
+}
+
+.message.assistant strong {
+  color: var(--gold);
+}
+
+.message.user strong {
+  color: var(--blue);
+}
+
+.message p {
+  margin: 8px 0 0;
+  color: #e7c987;
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.composer span {
+  color: var(--green);
+}
+
+.typed-command-dropdown {
+  margin-top: 8px;
+  border: 1px solid rgba(227, 167, 45, 0.62);
+  border-radius: 6px;
+  background: rgba(3, 3, 2, 0.98);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.36), inset 0 0 24px rgba(227, 167, 45, 0.05);
+  padding: 8px;
+}
+
+.typed-command-dropdown[hidden] {
+  display: none;
+}
+
+.inspector {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto 1fr 1fr;
+  gap: 8px;
+}
+
+.inspector .panel,
+.command-column,
+.file-queue,
+.permission-panel,
+.status-grid {
+  padding: 9px;
+}
+
+.model-card span,
+.model-card p {
+  color: var(--muted);
+}
+
+.model-card strong {
+  display: block;
+  margin: 6px 0;
+  color: var(--green);
+  font-size: 22px;
+}
+
+.meter {
+  height: 8px;
+  margin-top: 12px;
+  border: 1px solid var(--gold-dim);
+  background: rgba(227, 167, 45, 0.08);
+}
+
+.meter span {
+  display: block;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--green), var(--green) 5px, transparent 5px, transparent 9px);
+}
+
+.agent-list,
+.mcp-strip,
+.command-list,
+.file-list {
+  display: grid;
+  gap: 6px;
+}
+
+.mcp-strip {
+  max-height: 100%;
+  overflow: auto;
+  align-content: start;
+}
+
+.agent-card,
+.mcp-card,
+.command-row,
+.file-row {
+  border: 1px solid rgba(227, 167, 45, 0.2);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.24);
+  padding: 7px;
+  min-width: 0;
+}
+
+.agent-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 7px;
+  align-items: center;
+}
+
+.agent-card i,
+.mcp-card i {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--green);
+}
+
+.agent-card.idle i,
+.mcp-card.available i {
+  background: var(--gold);
+}
+
+.mcp-card.locked i {
+  background: var(--red);
+}
+
+.agent-card strong,
+.mcp-card strong,
+.command-row strong {
+  color: var(--text);
+}
+
+.agent-card span,
+.mcp-card span,
+.command-row span,
+.file-row span {
+  color: var(--muted);
+}
+
+.mcp-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.command-column {
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+}
+
+.menu-select {
+  margin-bottom: 7px;
+}
+
+.command-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  margin-bottom: 7px;
+}
+
+.command-tabs button {
+  padding: 5px 4px;
+}
+
+.command-list {
+  min-height: 0;
+  overflow: auto;
+}
+
+.command-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.command-row:hover {
+  border-color: rgba(227, 167, 45, 0.58);
+  background: rgba(227, 167, 45, 0.09);
+}
+
+.bottom-dock {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.85fr) minmax(320px, 1fr) minmax(320px, 1fr);
+  gap: 8px;
+  min-height: 0;
+}
+
+.file-list {
+  max-height: 58px;
+  overflow: auto;
+}
+
+.file-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.permission-panel {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.permission-panel p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.approval-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.startup {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  background: #020202;
+  transition: opacity 500ms ease, visibility 500ms ease;
+}
+
+.startup.done {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.startup-logo {
+  position: relative;
+  width: min(860px, 74vw);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: var(--line);
+  border-radius: 6px;
+  background: #050504;
+}
+
+.startup-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bars {
+  position: absolute;
+  inset: 0;
+}
+
+.bar {
+  position: absolute;
+  background: #030302;
+  animation: bar-drop 1100ms cubic-bezier(.2, .9, .2, 1) forwards;
+}
+
+@keyframes bar-drop {
+  to {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 1280px) {
+  .workspace {
+    grid-template-columns: 160px minmax(0, 1fr) 280px;
+  }
+
+  .command-column {
+    grid-column: 2 / 4;
+    min-height: 300px;
+  }
+
+  .bottom-dock {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1040px) {
+  .app-shell {
+    grid-template-rows: auto auto auto;
+  }
+
+  .topbar {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+
+  .inspector,
+  .command-column {
+    grid-column: 1 / -1;
+  }
+
+  .hero-band {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-status,
+  .control-deck,
+  .options-grid,
+  .status-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .rail {
+    grid-template-rows: auto auto auto;
+  }
+
+  .rail-nav,
+  .control-deck,
+  .options-grid,
+  .hero-status,
+  .status-grid,
+  .composer,
+  .bottom-dock {
+    grid-template-columns: 1fr;
+  }
+
+  .main-column {
+    grid-template-rows: auto auto auto auto;
+  }
+}

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "valeroy-ai"
+version = "1.0.0"
+description = "Valeroy AI - a local-first terminal agent runtime"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+# No third-party dependencies: the frontend and gateway use only the standard
+# library. The native speedups (C/C++/Rust/Go) are built separately.
+dependencies = []
+
+[project.scripts]
+valeroy = "valeroy_tui.cli:main"
+valeroy-gateway = "valeroy_backend.gateway:main"
+
+[tool.setuptools]
+packages = ["valeroy_backend", "valeroy_tui"]
+
+[tool.setuptools.package-dir]
+valeroy_backend = "backend/python/valeroy_backend"
+valeroy_tui = "frontend/valeroy_tui"

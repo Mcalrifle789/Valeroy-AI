@@ -1,0 +1,21 @@
+[package]
+name = "valeroy-core"
+version = "1.0.0"
+edition = "2021"
+description = "Valeroy AI core state engine: accounts, providers, sessions, agents, encrypted credential vault."
+license = "UNLICENSED"
+publish = false
+
+[[bin]]
+name = "valeroy-core"
+path = "src/main.rs"
+
+# Intentionally dependency-free: the core must build on a clean machine with no
+# crates.io access. SHA-256, HMAC, PBKDF2, ChaCha20 and JSON are implemented in
+#-tree under src/.
+[dependencies]
+
+[profile.release]
+opt-level = 2
+lto = true
+strip = true
